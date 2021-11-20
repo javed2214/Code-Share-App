@@ -15,9 +15,6 @@ const io = new Server(server)
 
 app.set('view engine', 'ejs')
 
-// const connectMongoDB = require('./config/db')
-// connectMongoDB()
-
 const  { connectRedis } = require('./redis')
 connectRedis()
 
