@@ -8,5 +8,23 @@
     "redis": "^3.1.2",
     "socket.io": "^4.3.2",
     "uuid": "^8.3.2"
-  }
+  },
+  "scripts": {
+    "app": "node server.js"
+  },
+  "name": "nodeproject",
+  "description": "It's a live code-sharing app that can be used to take interviews. Tech Stack: Node, Redis, Socket.io",
+  "version": "1.0.0",
+  "main": "redis.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/javed2214/Code-Share-App.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/javed2214/Code-Share-App/issues"
+  },
+  "homepage": "https://github.com/javed2214/Code-Share-App#readme"
 }
