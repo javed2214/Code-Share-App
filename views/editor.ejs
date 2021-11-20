@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js" integrity="sha512-u9akINsQsAkG9xjc1cnGF4zw5TFDwkxuc9vUp5dltDWYCSmyd0meygbvgXrlc/z7/o4a19Fb5V0OUE58J7dcyw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>Code Editor</title>
+    
+    <style>
+        textarea {
+            border: none;
+            overflow: auto;
+            outline: none;
+
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
+
+            resize: none; /*remove the resize handle on the bottom right*/
+            padding: 20px;
+            background-color: rgb(38, 43, 43);
+            color: white;
+        }
+        * {
+            margin: 0px;
+            padding: 0px;
+            background-color: black;
+        }
+    </style>
+    <script>
+        
+    </script>
+</head>
+<body>
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- <button style="float: left;" class="btn red">Delete</button> -->
+    <div style="margin: 15px;">
+        <div style="border: 2px solid white">
+            <textarea autofocus id="editor" class="editable" data-gramm="false" spellcheck="false" onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+' '+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}" id="editor" style="height: 3000px; font-size: 18px; font-family: monospace; background-color: black;color:white" placeholder="Start Typing From Here..."></textarea>
+        </div>
+    </div>
+</body>
+
+<script>
+    const saveData = async () => {
+        let editor = document.getElementById('editor').value
+        let jsonData = { editor }
+        const resp = await axios.post('http://localhost:4000/save', jsonData)
+        console.log(resp.data)
+    }
+    // $(".editable").keyup(function(e) {	
+	// 	switch(e.which)
+	// 	{
+	// 	case 219:
+    //         this.value += ']';
+	// 		break;
+	// 	case 188: //less than
+    //         this.value += '>';
+	// 		break;
+    //     case 57:
+    //         this.value += ')'
+    //         break
+	// 	}	
+    //     // console.log(this.value);
+	// 		console.log(e.which);
+    // });
+    var socket = io();
+
+    const id = '<%-id%>'
+
+    console.log(id)
+    let localData = localStorage.getItem('server')
+    socket.emit('user-joined', id, localData)
+
+    // function getEl(id) {
+    //     return document.getElementById(id)
+    // }
+    const editor = document.getElementById('editor')
+    let text = localStorage.getItem(id)
+    editor.value = text
+    
+    // if(localStorage.getItem('server').length != 0) {
+    //     const data = JSON.stringify(localStorage.getItem('server'))
+    //     socket.send(data)
+    // }
+    editor.addEventListener("keyup", (evt) => {
+        // if(localStorage.getItem('server').length != 0) {
+        //     const data = localStorage.getItem('server')
+        //     socket.send(data)
+        // }
+        const text = editor.value
+        const data = {
+            text,
+            id
+        }
+        // socket.send(text)
+        socket.emit('message', data)
+        var input = document.getElementById("editor");
+        localStorage.setItem(data.id, input.value);
+    })
+
+    socket.on('message', (data) => {
+        editor.value = data
+    })
+
+    socket.on('user-joined', () => {
+        alert('Candidate Joined!')
+    })
+
+    socket.on('left', () => {
+        alert('Candidate Left!')
+    })
+
+</script>
+
+</html>
