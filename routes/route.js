@@ -17,8 +17,8 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
     const id = uuid.v4()
-    // redisClient.set(id, true)
-    redisClient.incr(id)
+    redisClient.set(id, true)
+    // redisClient.incr(id)
     redisClient.expire(id, 3600)
     res.json({ id })
 })
